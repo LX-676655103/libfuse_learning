@@ -52,9 +52,12 @@ static const struct fuse_opt option_spec[] = {
 	FUSE_OPT_END
 };
 
+int order = 0;
+
 static void *hello_init(struct fuse_conn_info *conn,
 			struct fuse_config *cfg)
 {
+	printf("No.%d Call hello_init\n", ++order);
 	(void) conn;
 	cfg->kernel_cache = 1;
 	return NULL;
@@ -65,6 +68,8 @@ static int hello_getattr(const char *path, struct stat *stbuf,
 {
 	(void) fi;
 	int res = 0;
+
+	printf("No.%d Call hello_getattr\n", ++order);
 
 	memset(stbuf, 0, sizeof(struct stat));
 	if (strcmp(path, "/") == 0) {
@@ -88,6 +93,8 @@ static int hello_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 	(void) fi;
 	(void) flags;
 
+	printf("No.%d Call hello_readdir\n", ++order);
+
 	if (strcmp(path, "/") != 0)
 		return -ENOENT;
 
@@ -100,6 +107,8 @@ static int hello_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 
 static int hello_open(const char *path, struct fuse_file_info *fi)
 {
+	printf("No.%d Call hello_open\n", ++order);
+
 	if (strcmp(path+1, options.filename) != 0)
 		return -ENOENT;
 
@@ -112,6 +121,8 @@ static int hello_open(const char *path, struct fuse_file_info *fi)
 static int hello_read(const char *path, char *buf, size_t size, off_t offset,
 		      struct fuse_file_info *fi)
 {
+	printf("No.%d Call hello_read\n", ++order);
+
 	size_t len;
 	(void) fi;
 	if(strcmp(path+1, options.filename) != 0)
@@ -129,7 +140,7 @@ static int hello_read(const char *path, char *buf, size_t size, off_t offset,
 }
 
 static const struct fuse_operations hello_oper = {
-	.init           = hello_init,
+	.init       = hello_init,
 	.getattr	= hello_getattr,
 	.readdir	= hello_readdir,
 	.open		= hello_open,
@@ -172,6 +183,8 @@ int main(int argc, char *argv[])
 		assert(fuse_opt_add_arg(&args, "--help") == 0);
 		args.argv[0][0] = '\0';
 	}
+
+	printf("No.%d Call main\n", ++order);
 
 	ret = fuse_main(args.argc, args.argv, &hello_oper, NULL);
 	fuse_opt_free_args(&args);

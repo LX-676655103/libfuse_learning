@@ -37,7 +37,11 @@
 #define _GNU_SOURCE
 #define FUSE_USE_VERSION 34
 
-#include "config.h"
+// #include "config.h"
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 #include <fuse_lowlevel.h>
 #include <unistd.h>

@@ -30,7 +30,7 @@
 #include <assert.h>
 
 static const char *hello_str = "Hello World!\n";
-static const char *hello_name = "hello";
+static const char *hello_name = "test_hello";
 
 static int hello_stat(fuse_ino_t ino, struct stat *stbuf)
 {
